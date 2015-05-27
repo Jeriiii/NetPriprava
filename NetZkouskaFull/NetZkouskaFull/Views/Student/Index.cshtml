@@ -10,6 +10,18 @@
 	@Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
+	@using (Html.BeginForm())
+	{
+		<p>
+			Find by name: @Html.TextBox("sName")
+			Lastname: @Html.TextBox("sLastname")
+			ID: @Html.TextBox("sID")
+			@Html.DropDownList("sHasCreditDown", String.Empty)
+			@Html.DropDownList("sGrade", String.Empty)
+
+			<input type="submit" value="Search" />
+		</p>
+	}
 	<tr>
 		<th>
 			@Html.ActionLink("Jmeno", "Index", new { sortOrder = ViewBag.NameSortParm })

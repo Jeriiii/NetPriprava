@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using NetZkouskaFull.DAL;
 using NetZkouskaFull.Models;
+using System.Collections;
 
 namespace NetZkouskaFull.Controllers
 {
@@ -16,17 +17,83 @@ namespace NetZkouskaFull.Controllers
 		private NetContext db = new NetContext();
 
 		// GET: Student
-		public ActionResult Index(string sortOrder)
+		public ActionResult Index(string sortOrder, string sLastname, string sName, string sSI, string sHasCreditDown, string sGrade)
 		{
+
+
+			/*** Vzhledavani ***/
+
+			ViewBag.sHasCreditDown = new SelectList(new List<SelectListItem> {
+				//new SelectListItem { Selected = true, Text = string.Empty, Value = "-1"},
+				new SelectListItem { Selected = false, Text = "Ma", Value = "Ma"},
+				new SelectListItem { Selected = false, Text = "Nema", Value = "Nema"}
+			}, "Value", "Text", null);
+
+			ViewBag.sGrade = new SelectList(new List<SelectListItem> {
+				//new SelectListItem { Selected = true, Text = string.Empty, Value = "-1"},
+				new SelectListItem { Selected = false, Text = "1", Value = "1"},
+				new SelectListItem { Selected = false, Text = "2", Value = "2"},
+				new SelectListItem { Selected = false, Text = "3", Value = "3"},
+				new SelectListItem { Selected = false, Text = "4", Value = "4"},
+			}, "Value", "Text", null);
+
+			var students = from s in db.Students
+						   select s;
+
+			List<int> search = new List<int>();
+
+			if (!String.IsNullOrEmpty(sLastname))
+			{
+				students = students.Where(s => s.Lastname.Contains(sLastname)
+									   || s.Lastname.Contains(sLastname));
+			}
+
+			if (!String.IsNullOrEmpty(sName))
+			{
+				students = students.Where(s => s.Name.Contains(sName)
+									   || s.Name.Contains(sName));
+			}
+
+			if (!String.IsNullOrEmpty(sSI))
+			{
+				students = students.Where(s => s.StudentIdentity.Contains(sSI)
+									   || s.StudentIdentity.Contains(sSI));
+			}
+
+			if (!String.IsNullOrEmpty(sHasCreditDown))
+			{
+				foreach(Student s in students) {
+					if (s.HasWorkDown.Equals(sHasCreditDown))
+					{
+						search.Add(s.StudentID);
+					}
+				}
+
+				students = findStudents(students, search);
+			}
+
+			if (!String.IsNullOrEmpty(sGrade))
+			{
+				search = new List<int>();
+				foreach (Student s in students)
+				{
+					if (s.Grade.ToString().Equals(sGrade))
+					{
+						search.Add(s.StudentID);
+					}
+				}
+
+				students = findStudents(students, search);
+			}
+
+			/*** RAZENI / SORTOVANI ***/
+
 			ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 			ViewBag.LastnameSortParm = sortOrder == "Lastname" ? "lastname_desc" : "Lastname";
 			ViewBag.SISortParm = sortOrder == "SI" ? "si_desc" : "SI";
 			ViewBag.HasWorkDownSortParm = sortOrder == "HasWorkDown" ? "hasWorkDown_desc" : "HasWorkDown";
 			ViewBag.GradeSortParm = sortOrder == "Grade" ? "grade_desc" : "Grade";
 			ViewBag.GradePointsSortParm = sortOrder == "GradePoints" ? "gradePoints_desc" : "GradePoints";
-
-			var students = from s in db.Students
-						   select s;
 
 			List<Student> std = students.ToList();
 
@@ -107,6 +174,14 @@ namespace NetZkouskaFull.Controllers
 			}
 
 			return View(students.ToList());
+		}
+
+		private IQueryable<Student> findStudents(IQueryable<Student> students, List<int> searchIDs)
+		{
+			return students.Where(s => (
+					searchIDs.Contains(s.StudentID)
+				)
+			);
 		}
 
 		// GET: Student/Details/5
