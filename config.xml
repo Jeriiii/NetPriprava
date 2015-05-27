@@ -1,19 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <configs>
 	<work>
-		<workPoints>
-			50
-		</workPoints>
+		<workPoints>45</workPoints>
 	</work>
 	<exam>
-		<one>
-			70
-		</one>
-		<two>
-			60
-		</two>
-		<three>
-			45
-		</three>
+		<one>45</one>
+		<two>55</two>
+		<three>65</three>
 	</exam>
 </configs>

@@ -12,22 +12,22 @@
 <table class="table">
 	<tr>
 		<th>
-			@Html.DisplayNameFor(model => model.Name)
+			@Html.ActionLink("Jmeno", "Index", new { sortOrder = ViewBag.NameSortParm })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.Lastname)
+			@Html.ActionLink("Prijmeni", "Index", new { sortOrder = ViewBag.LastnameSortParm })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.StudentIdentity)
+			@Html.ActionLink("ID", "Index", new { sortOrder = ViewBag.SISortParm })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.HasWorkDown)
+			@Html.ActionLink("Zapocet", "Index", new { sortOrder = ViewBag.HasWorkDownSortParm })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.Grade)
+			@Html.ActionLink("Znamka", "Index", new { sortOrder = ViewBag.GradeSortParm })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.GradePoints)
+			@Html.ActionLink("Body zk", "Index", new { sortOrder = ViewBag.GradePointsSortParm })
 		</th>
 		<th></th>
 	</tr>

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace NetZkouskaFull.DAL
 {
@@ -10,17 +11,13 @@ namespace NetZkouskaFull.DAL
 	{
 		protected override void Seed(NetContext context)
 		{
-			Work w1 = new Work{Points = 45};
+			SaveToXml();
+			var students =  LoadToXml();
 
-			Student s1 = new Student{Name="Carson",Lastname="Alexander",StudentIdentity="a10b0618p"};
-
-			var students = new List<Student>
-			{
-			new Student{Name="Meredith",Lastname="Alonso",StudentIdentity="a10b0618p"},
-			new Student{Name="Arturo",Lastname="Anand",StudentIdentity="a10b0618p"},
-			new Student{Name="Gytis",Lastname="Barzdukas",StudentIdentity="a10b0618p"},
-			new Student{Name="Carson",Lastname="Alexander",StudentIdentity="a10b0618p"}
-			};
+			students.Add(new Student{Name="Meredith",Lastname="Alonso",StudentIdentity="a10b0618p"});
+			students.Add(new Student{Name="Arturo",Lastname="Anand",StudentIdentity="a10b0618p"});
+			students.Add(new Student{Name="Gytis",Lastname="Barzdukas",StudentIdentity="a10b0618p"});
+			students.Add(new Student{Name="Carson",Lastname="Alexander",StudentIdentity="a10b0618p"});
 
 			Random r = new Random(75);
 			foreach(Student s in students) {
@@ -40,6 +37,65 @@ namespace NetZkouskaFull.DAL
 
 			students.ForEach(s => context.Students.Add(s));
 			context.SaveChanges();
+		}
+	
+
+	public void SaveToXml()
+		{
+			// vytvor dokument
+			XDocument doc = new XDocument();
+			
+			// vytvor element "Studenti" a pridej do dokumentu
+			XElement xmlStudents = new XElement("Studenti");
+			doc.Add(xmlStudents);
+
+			var students = new List<Student>
+			{
+			new Student{Name="Carson",Lastname="Alexander",StudentIdentity="a10b0618p"},
+			new Student{Name="Neal",Lastname="Jackson",StudentIdentity="a10b0618p"},
+			new Student{Name="Pepa",Lastname="Omáčka",StudentIdentity="a10b0618p"},
+			new Student{Name="Honza",Lastname="Skočdopole",StudentIdentity="a10b0618p"}
+			};
+
+			Random r = new Random();
+			// pro kazdeho studenta vytvor element a vnorene elementy a napln hodnotami
+			foreach (var student in students)
+			{
+				xmlStudents.Add(new XElement("Student",
+					new XElement("Jmeno", student.Name),
+					new XElement("Prijmeni", student.Lastname),
+					new XElement("ID", student.StudentIdentity)
+				));
+			}
+
+			doc.Save("D:\\škola\\netZkouskaFull\\data.xml");
+		}
+				  
+		public List<Student> LoadToXml()
+		{
+			List<Student> students =new List<Student>();
+
+			// vytvor dokument
+			XDocument configXML = XDocument.Load("D:\\škola\\netZkouskaFull\\data.xml");
+
+			// vytvor element "Studenti" a pridej do dokumentu
+			var xmlStudents = from c in configXML.Descendants("Studenti").Descendants("Student") select c;
+			
+
+			// pro kazdeho studenta vytvor element a vnorene elementy a napln hodnotami
+			foreach (var student in xmlStudents)
+			{
+				string name = (string) student.Descendants("Jmeno").FirstOrDefault();
+				string lastname = (string)student.Descendants("Prijmeni").FirstOrDefault();
+				string id = (string)student.Descendants("ID").FirstOrDefault();
+
+
+				Student st = new Student { Name = name, Lastname = lastname, StudentIdentity = id };
+
+				students.Add(st);
+			}
+
+			return students;
 		}
 	}
 }
