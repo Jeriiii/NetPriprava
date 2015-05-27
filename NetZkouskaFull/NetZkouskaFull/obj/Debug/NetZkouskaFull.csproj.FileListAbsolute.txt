@@ -52,3 +52,4 @@ D:\škola\netZkouskaFull\NetZkouskaFull\NetZkouskaFull\bin\Microsoft.Owin.Securi
 D:\škola\netZkouskaFull\NetZkouskaFull\NetZkouskaFull\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 D:\škola\netZkouskaFull\NetZkouskaFull\NetZkouskaFull\obj\Debug\NetZkouskaFull.dll
 D:\škola\netZkouskaFull\NetZkouskaFull\NetZkouskaFull\obj\Debug\NetZkouskaFull.pdb
+D:\škola\netZkouskaFull\NetZkouskaFull\NetZkouskaFull\obj\Debug\NetZkouskaFull.csprojResolveAssemblyReference.cache
